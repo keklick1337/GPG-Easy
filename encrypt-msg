@@ -1,0 +1,50 @@
+#!/bin/bash
+
+useMessage() {
+    echo "    Use: "
+    echo "        ./encrypt-msg textfile.txt RECIPEID"
+    exit 1
+}
+
+if [ -z "$1" ]; then
+    useMessage
+fi
+
+#check file is exist
+if [ -f "$1" ]; then
+    :
+else 
+    printf "    File: $1 does not exist!\n\
+        Please enter correct filename.\n"
+    useMessage
+fi
+
+if [ -z "$2" ]; then
+    useMessage
+fi
+
+checkGPGKey() {
+    gpg --list-keys $1 > /dev/null 2>&1
+    if [ $? -eq 0 ] 
+    then 
+        :
+    else
+        printf "    Public key not found. Check public key\n\n\
+        Run: ./get-keys\n\
+        \n" >&2 
+        exit 1
+    fi
+}
+
+checkGPGKey $2
+
+gpg --trust-model always --encrypt --armor --recipient $2 $1
+
+if [ $? -eq 0 ] 
+then 
+    echo "    File saved to $1.asc"
+    exit 0
+else 
+    echo "    Unknown error" >&2 
+    exit 1
+fi

@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "List public keys:"
+gpg --list-public-keys

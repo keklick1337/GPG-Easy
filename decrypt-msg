@@ -1,0 +1,22 @@
+#!/bin/bash
+
+useMessage() {
+    echo "    Use: "
+    echo "        ./decrypt-msg encryped.asc"
+    exit 1
+}
+
+if [ -z "$1" ]; then
+    useMessage
+fi
+
+#check file is exist
+if [ -f "$1" ]; then
+    :
+else 
+    printf "    File: $1 does not exist!\n\
+        Please enter correct filename.\n"
+    useMessage
+fi
+
+gpg $1
